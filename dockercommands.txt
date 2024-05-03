@@ -1,0 +1,123 @@
+ubuntu@ip-172-31-8-96:~$ docker --version
+Docker version 26.1.1, build 4cf5afa
+
+ubuntu@ip-172-31-8-96:~$ docker pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+b0a0cf830b12: Pull complete
+8ddb1e6cdf34: Pull complete
+5252b206aac2: Pull complete
+988b92d96970: Pull complete
+7102627a7a6e: Pull complete
+93295add984d: Pull complete
+ebde0aa1d1aa: Pull complete
+Digest: sha256:ed6d2c43c8fbcd3eaa44c9dab6d94cb346234476230dc1681227aa72d07181ee
+Status: Downloaded newer image for nginx:latest
+docker.io/library/nginx:latest
+
+
+ubuntu@ip-172-31-8-96:~$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED      SIZE
+nginx        latest    7383c266ef25   9 days ago   188MB
+
+
+ubuntu@ip-172-31-8-96:~$ vi Dockerfile
+ubuntu@ip-172-31-8-96:~$ vi Dockerfile
+ubuntu@ip-172-31-8-96:~$ docker build -t 7383c266ef25 .
+
+ubuntu@ip-172-31-8-96:~$ vi index.html
+
+ubuntu@ip-172-31-8-96:~$ docker build -t 7383c266ef25 .
+[+] Building 19.6s (9/9) FINISHED                                                                                                                                                                   docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                                                          0.0s
+ => => transferring dockerfile: 156B                                                                                                                                                                          0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:latest                                                                                                                                              0.6s
+ => [internal] load .dockerignore                                                                                                                                                                             0.0s
+ => => transferring context: 2B                                                                                                                                                                               0.0s
+ => [1/4] FROM docker.io/library/ubuntu:latest@sha256:3f85b7caad41a95462cf5b787d8a04604c8262cdcdf9a472b8c52ef83375fe15                                                                                        2.3s
+ => => resolve docker.io/library/ubuntu:latest@sha256:3f85b7caad41a95462cf5b787d8a04604c8262cdcdf9a472b8c52ef83375fe15                                                                                        0.0s
+ => => sha256:3f85b7caad41a95462cf5b787d8a04604c8262cdcdf9a472b8c52ef83375fe15 1.13kB / 1.13kB                                                                                                                0.0s
+ => => sha256:d21429c4635332e96a4baae3169e3f02ac8e24e6ae3d89a86002d49a1259a4f7 424B / 424B                                                                                                                    0.0s
+ => => sha256:bf3dc08bfed031182827888bb15977e316ad797ee2ccb63b4c7a57fdfe7eb31d 2.30kB / 2.30kB                                                                                                                0.0s
+ => => sha256:49b384cc7b4aa0dfd16ff7817ad0ea04f1d0a8072e62114efcd99119f8ceb9ed 28.87MB / 28.87MB                                                                                                              0.5s
+ => => extracting sha256:49b384cc7b4aa0dfd16ff7817ad0ea04f1d0a8072e62114efcd99119f8ceb9ed                                                                                                                     1.6s
+ => [internal] load build context                                                                                                                                                                             0.0s
+ => => transferring context: 62B                                                                                                                                                                              0.0s
+ => [2/4] RUN apt update -y                                                                                                                                                                                   9.1s
+ => [3/4] RUN apt install nginx -y                                                                                                                                                                            7.0s
+ => [4/4] ADD index.html /var/www/html                                                                                                                                                                        0.1s
+ => exporting to image                                                                                                                                                                                        0.3s
+ => => exporting layers                                                                                                                                                                                       0.3s
+ => => writing image sha256:53561b92d9e04cc7b91a70394a905479f853cd522f439502e0d3efb20ef5288b                                                                                                                  0.0s
+ => => naming to docker.io/library/7383c266ef25                                                                                                                                                               0.0s
+ubuntu@ip-172-31-8-96:~$ docker images
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+7383c266ef25   latest    53561b92d9e0   19 seconds ago   122MB
+nginx          latest    7383c266ef25   9 days ago       188MB
+
+ubuntu@ip-172-31-8-96:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+ubuntu@ip-172-31-8-96:~$ docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+ubuntu@ip-172-31-8-96:~$ docker run -d -p 3000:80 --name test1 53561b92d9e0
+a9f007c92c669f91db47716bb04ba2d4b2787279e7b4d6e5ba1cae664174c645
+
+ubuntu@ip-172-31-8-96:~$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                   NAMES
+a9f007c92c66   53561b92d9e0   "nginx -g 'daemon of…"   3 seconds ago   Up 3 seconds   0.0.0.0:3000->80/tcp, :::3000->80/tcp   test1
+
+ubuntu@ip-172-31-8-96:~$ docker stop test1
+test1
+
+ubuntu@ip-172-31-8-96:~$ docker rm test1
+test1
+
+ubuntu@ip-172-31-8-96:~$ docker volume
+Usage:  docker volume COMMAND
+
+Manage volumes
+
+Commands:
+  create      Create a volume
+  inspect     Display detailed information on one or more volumes
+  ls          List volumes
+  prune       Remove unused local volumes
+  rm          Remove one or more volumes
+
+Run 'docker volume COMMAND --help' for more information on a command.
+
+ubuntu@ip-172-31-8-96:~$ docker volume ls
+DRIVER    VOLUME NAME
+
+ubuntu@ip-172-31-8-96:~$ docker volume create testvolume
+testvolume
+
+ubuntu@ip-172-31-8-96:~$ docker volume ls
+DRIVER    VOLUME NAME
+local     testvolume
+
+ubuntu@ip-172-31-8-96:~$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+6827ffcba8f9   bridge    bridge    local
+7636ac1011c6   host      host      local
+7d38a0561d83   none      null      local
+
+ubuntu@ip-172-31-8-96:~$ docker network create testnetwork
+190f45e139949eb54be2bd95d269739db30efe8a05aeb2361a92fae3daa4445b
+
+ubuntu@ip-172-31-8-96:~$ docker network ls
+NETWORK ID     NAME          DRIVER    SCOPE
+6827ffcba8f9   bridge        bridge    local
+7636ac1011c6   host          host      local
+7d38a0561d83   none          null      local
+190f45e13994   testnetwork   bridge    local
+
+ubuntu@ip-172-31-8-96:~$ docker run -d -p 3000:80 --name test1 53561b92d9e0
+4ed0c9b18b08d1f830bf51db0b695a2a03a8c45c111767bef34d90a478ee34f9
+
+ubuntu@ip-172-31-8-96:~$ docker network connect testnetwork test1
+ubuntu@ip-172-31-8-96:~$
+
